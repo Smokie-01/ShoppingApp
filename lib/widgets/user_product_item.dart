@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopapp/providers/products_provider.dart';
 
 import 'package:shopapp/screens/edit_product_screen.dart';
 
@@ -26,7 +28,32 @@ class UserProductItem extends StatelessWidget {
               },
               icon: Icon(Icons.edit),
             ),
-            IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+            IconButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Are you sure ?"),
+                          content: Text("you want to delete this item!"),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("no")),
+                            TextButton(
+                                onPressed: () {
+                                  Provider.of<Products>(context, listen: false)
+                                      .removeProduct(productID);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Yes I do !"))
+                          ],
+                        );
+                      });
+                },
+                icon: Icon(Icons.delete))
           ],
         ),
       ),

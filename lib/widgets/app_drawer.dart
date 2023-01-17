@@ -22,7 +22,7 @@ class AppDrawer extends StatelessWidget {
             ),
             Divider(
               color: Colors.white60,
-              thickness: 0.8,
+              thickness: 1,
             ),
             ListTile(
               leading: Icon(Icons.payment),
@@ -33,7 +33,7 @@ class AppDrawer extends StatelessWidget {
             ),
             Divider(
               color: Colors.white60,
-              thickness: 0.8,
+              thickness: 1,
             ),
             ListTile(
               leading: Icon(Icons.edit),

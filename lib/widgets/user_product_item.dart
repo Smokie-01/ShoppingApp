@@ -12,6 +12,7 @@ class UserProductItem extends StatelessWidget {
       {required this.title, required this.imageURL, required this.productID});
   @override
   Widget build(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
     return ListTile(
       title: Text(title),
       leading: CircleAvatar(
@@ -26,34 +27,22 @@ class UserProductItem extends StatelessWidget {
                 Navigator.of(context).pushNamed(EditProductScreen.namedroute,
                     arguments: productID);
               },
-              icon: Icon(Icons.edit),
+              icon: const Icon(Icons.edit),
             ),
             IconButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("Are you sure ?"),
-                          content: Text("you want to delete this item!"),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("no")),
-                            TextButton(
-                                onPressed: () {
-                                  Provider.of<Products>(context, listen: false)
-                                      .removeProduct(productID);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("Yes I do !"))
-                          ],
-                        );
-                      });
+                onPressed: () async {
+                  try {
+                    await Provider.of<Products>(context, listen: false)
+                        .removeProduct(productID);
+                  } catch (e) {
+                    scaffold.showSnackBar(const SnackBar(
+                        content: Text(
+                      "Deleting failed",
+                      textAlign: TextAlign.center,
+                    )));
+                  }
                 },
-                icon: Icon(Icons.delete))
+                icon: const Icon(Icons.delete))
           ],
         ),
       ),

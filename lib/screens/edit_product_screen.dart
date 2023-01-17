@@ -84,18 +84,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
       });
 
       if (_editedProduct.id != "") {
-        Provider.of<Products>(context, listen: false)
+        await Provider.of<Products>(context, listen: false)
             .updateProduct(_editedProduct.id, _editedProduct);
-        Navigator.pop(context);
-        setState(() {
-          isLoading = false;
-        });
       } else {
         try {
           await Provider.of<Products>(context, listen: false)
               .addProduct(_editedProduct);
-        } catch (e) {
-          return showDialog(
+        } catch (error) {
+          await showDialog(
+              barrierDismissible: false,
               context: context,
               builder: (context) => AlertDialog(
                       title: const Text("An Error occured"),
@@ -107,23 +104,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             },
                             child: const Text("Okay")),
                       ]));
-        } finally {
-          setState(() {
-            isLoading = false;
-            Navigator.pop(context);
-            if (Provider.of<Products>(context, listen: false)
-                .items
-                .contains(_editedProduct)) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text(
-                'Item Added',
-                textAlign: TextAlign.center,
-              )));
-            }
-          });
         }
       }
     }
+    setState(() {
+      isLoading = false;
+    });
+    Navigator.pop(context);
   }
 
   @override

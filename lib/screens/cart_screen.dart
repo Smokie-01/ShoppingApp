@@ -27,7 +27,7 @@ class CartScreen extends StatelessWidget {
                     ),
                     Chip(
                       label: Text(
-                        "\$${cart.totalAmount.toInt()}",
+                        "\$${cart.totalAmount.toStringAsFixed(2)}",
                         style: TextStyle(color: Colors.white),
                       ),
                       backgroundColor: Theme.of(context).backgroundColor,
@@ -35,17 +35,7 @@ class CartScreen extends StatelessWidget {
                   ]),
             ),
           ),
-          ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.black12)),
-              onPressed: () {
-                Provider.of<Orders>(context, listen: false).addOrderItems(
-                    cart.items.values.toList(), cart.totalAmount);
-                cart.clearItems();
-              },
-              child: Text(
-                "ORDER NOW",
-              )),
+          OrderButton(cart: cart),
           Expanded(
               child: ListView.builder(
                   itemCount: cart.items.length,
@@ -58,5 +48,44 @@ class CartScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  OrderButton({
+    required this.cart,
+  });
+
+  final Cart cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var isloading = false;
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.black12)),
+        onPressed: (widget.cart.totalAmount <= 0 || isloading)
+            ? null
+            : () async {
+                setState(() {
+                  isloading = true;
+                });
+                await Provider.of<Orders>(context, listen: false).addOrderItems(
+                    widget.cart.items.values.toList(), widget.cart.totalAmount);
+                widget.cart.clearItems();
+                setState(() {
+                  isloading = false;
+                });
+              },
+        child: isloading
+            ? Center(child: CircularProgressIndicator())
+            : Text(
+                "ORDER NOW",
+              ));
   }
 }

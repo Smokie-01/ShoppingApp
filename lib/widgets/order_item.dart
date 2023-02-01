@@ -1,18 +1,20 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:shopapp/providers/orders_provider.dart' as ord;
 import 'package:intl/intl.dart';
 
-class OrderProduct extends StatefulWidget {
+class OrderProducts extends StatefulWidget {
   final ord.OrderItem order;
-  OrderProduct(this.order);
+  OrderProducts(this.order);
 
   @override
-  State<OrderProduct> createState() => _OrderProductState();
+  State<OrderProducts> createState() => _OrderProductState();
 }
 
-class _OrderProductState extends State<OrderProduct> {
+class _OrderProductState extends State<OrderProducts> {
+  bool isloading = false;
+
+  @override
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class _OrderProductState extends State<OrderProduct> {
       child: Column(
         children: [
           ListTile(
-            title: Text("'\$${widget.order.amount}'"),
+            title: Text("'\$${widget.order.totalAmount}'"),
             subtitle: Text(
                 DateFormat("dd-mm-yyyy  hh:mm").format(widget.order.dateTime)),
             trailing: IconButton(

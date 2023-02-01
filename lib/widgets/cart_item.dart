@@ -14,6 +14,7 @@ class CartItem extends StatelessWidget {
       required this.price,
       required this.quantity,
       required this.title});
+
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
